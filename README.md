@@ -64,7 +64,7 @@ At the moment, the only options supported are:
 
 ### Exception Handling
 
-A call to `fetch` can throw two exceptions, which are property documented.
+A call to `fetch` can throw two exceptions, which are properly documented.
 
 A `MNC\Http\SocketError` is thrown when a TCP connection cannot be established
 with the server. Common scenarios where this may happen include:
@@ -74,9 +74,9 @@ with the server. Common scenarios where this may happen include:
 - The server took too long to produce a response (timeout)
 - The SSL handshake failed (non trusted certificate)
 
-A `MNC\Http\ProtocolError` occurs when a connection could be established, and the
-a response was produced by the server, but this response was an error according
-to the HTTP protocol specification (a status code in the 400 or 500 range). This exception
+A `MNC\Http\ProtocolError` occurs when a connection could be established, and a
+response was produced by the server, but this response was an error according to
+the HTTP protocol specification (a status code in the 400 or 500 range). This exception
 contains the `MNC\Http\Response` object that the server produced.
 
 The distinction between these two kind of errors is really important since
@@ -186,7 +186,7 @@ $lastModified = $stdHeaders->getLastModified()->diff(new DateTimeImmutable(), tr
 echo sprintf('This html content was last modified %s hours ago...', $lastModified) . PHP_EOL;
 ```
 
-You can use these headers information to handle chaching or avoiding reading the whole
+You can use these headers information to handle caching or avoiding reading the whole
 stream body if is not necessary.
 
 Since these standards headers may not be present in a certain responses, they
