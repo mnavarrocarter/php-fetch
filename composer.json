@@ -1,0 +1,32 @@
+{
+    "name": "mnavarrocarter/php-fetch",
+    "description": "A simple, type-safe, zero dependency port of the javascript fetch WebApi for PHP",
+    "minimum-stability": "stable",
+    "license": "MIT",
+    "keywords": ["php", "php7", "http", "http-client", "streams", "fetch", "web-api", "request", "response"],
+    "authors": [
+        {
+            "name": "Matias Navarro Carter",
+            "email": "mnavarrocarter@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "MNC\\Http\\": "src"
+        },
+        "files": ["functions.php"]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "MNC\\Http\\": "tests"
+        }
+    },
+    "require": {
+        "php": ">=7.4",
+        "ext-json": "*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.4",
+        "symfony/var-dumper": "^5.1"
+    }
+}
