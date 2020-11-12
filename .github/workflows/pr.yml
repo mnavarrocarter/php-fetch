@@ -30,7 +30,6 @@ jobs:
         with:
           path: |
             ~/.composer/cache
-            vendor
           key: "php-${{ matrix.php-version }}-locked"
           restore-keys: "php-${{ matrix.php-version }}-locked"
       - name: "Install locked dependencies"
@@ -62,7 +61,6 @@ jobs:
         with:
           path: |
             ~/.composer/cache
-            vendor
           key: "php-${{ matrix.php-version }}-locked"
           restore-keys: "php-${{ matrix.php-version }}-locked"
       - name: "Install locked dependencies"
@@ -98,7 +96,6 @@ jobs:
         with:
           path: |
             ~/.composer/cache
-            vendor
           key: "php-${{ matrix.php-version }}-locked"
           restore-keys: "php-${{ matrix.php-version }}-${{ matrix.dependencies }}"
       - name: "Install lowest dependencies"
