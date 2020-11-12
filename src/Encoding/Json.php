@@ -30,6 +30,8 @@ final class Json implements Reader, JsonDecoder
     }
 
     /**
+     * @return array<mixed, mixed>
+     *
      * @throws JsonException
      * @throws ReaderError
      */
