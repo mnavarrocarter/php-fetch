@@ -20,6 +20,7 @@ interface JsonDecoder
      * Decodes a json string into an associative array.
      *
      * @return array<mixed, mixed>
+     *
      * @throws JsonException when parsing fails
      */
     public function decode(): array;

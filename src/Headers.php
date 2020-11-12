@@ -21,6 +21,7 @@ class Headers
 
     /**
      * @internal You should not use this api
+     *
      * @param list<string> $lines
      */
     public static function fromLines(array &$lines): Headers

@@ -22,6 +22,7 @@ final class HttpPartialResponse implements PartialResponse
 
     /**
      * @param list<string> $lines
+     *
      * @return list<HttpPartialResponse>
      */
     public static function parseLines(array $lines): array
