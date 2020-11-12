@@ -9,15 +9,18 @@
 
 namespace MNC\Http;
 
-use MNC\Http\Io\Reader;
-
 /**
- * A Response represents a full HTTP protocol response.
+ * A PartialResponse represents an HTTP response that does not have body.
  */
-interface Response extends PartialResponse
+interface PartialResponse
 {
     /**
-     * Returns the response body.
+     * Returns the information of the HTTP status line.
      */
-    public function body(): Reader;
+    public function status(): Status;
+
+    /**
+     * Returns the response headers.
+     */
+    public function headers(): Headers;
 }

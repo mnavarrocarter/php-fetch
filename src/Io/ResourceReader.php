@@ -1,15 +1,18 @@
 <?php
+
 declare(strict_types=1);
 
+/*
+ * This file is part of the https://github.com/mnavarrocarter/php-fetch project.
+ * (c) Matías Navarro-Carter <mnavarrocarter@gmail.com>
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
 namespace MNC\Http\Io;
 
-use Exception;
-use RuntimeException;
-
 /**
- * Class ResourceReader
- * @package Spatialest\ETL
+ * Class ResourceReader.
  */
 final class ResourceReader implements Reader
 {
@@ -20,6 +23,7 @@ final class ResourceReader implements Reader
 
     /**
      * ResourceReader constructor.
+     *
      * @param resource $resource
      */
     public function __construct($resource)
@@ -31,8 +35,6 @@ final class ResourceReader implements Reader
     }
 
     /**
-     * @param int $bytes
-     * @return string|null
      * @throws ReaderError
      */
     public function read(int $bytes = self::DEFAULT_CHUNK_SIZE): ?string
@@ -40,10 +42,11 @@ final class ResourceReader implements Reader
         if (feof($this->resource)) {
             return null;
         }
-        $result = fread($this->resource, $bytes);
+        $result = @fread($this->resource, $bytes);
         if ($result === false) {
-            throw new ReaderError(error_get_last());
+            throw new ReaderError(error_get_last()['message'] ?? 'Unknown error');
         }
+
         return $result;
     }
 }

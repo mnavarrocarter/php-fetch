@@ -7,21 +7,19 @@
  * file that was distributed with this source code.
  */
 
-namespace MNC\Http\Io;
+namespace MNC\Http;
 
 /**
- * Interface Reader.
+ * A Redirected defines a response that contains redirection information.
  */
-interface Reader
+interface Redirected
 {
-    public const DEFAULT_CHUNK_SIZE = 4096;
-
     /**
-     * Reads raw bytes from the source.
+     * Returns an array with information about previous responses.
      *
-     * Returns null on EOF
+     * The body of those responses is not available.
      *
-     * @throws ReaderError when contents cannot be read
+     * @return PartialResponse[]
      */
-    public function read(int $bytes = self::DEFAULT_CHUNK_SIZE): ?string;
+    public function previousResponses(): array;
 }

@@ -1,26 +1,28 @@
 <?php
 
+/*
+ * This file is part of the https://github.com/mnavarrocarter/php-fetch project.
+ * (c) Matías Navarro-Carter <mnavarrocarter@gmail.com>
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace MNC\Http\Encoding;
 
 use JsonException;
+use function MNC\Http\buffer;
 use MNC\Http\Io\Reader;
 use MNC\Http\Io\ReaderError;
-use function MNC\Http\buffer;
 
 /**
- * Class Json
- * @package MNC\Http\Io
+ * Class Json.
  */
-final class Json implements Reader, JsonDecoder, JsonReader
+final class Json implements Reader, JsonDecoder
 {
-    /**
-     * @var Reader
-     */
     private Reader $reader;
 
     /**
      * Json constructor.
-     * @param Reader $reader
      */
     public function __construct(Reader $reader)
     {
@@ -28,22 +30,12 @@ final class Json implements Reader, JsonDecoder, JsonReader
     }
 
     /**
-     * @return string
-     * @throws ReaderError
-     */
-    public function readAll(): string
-    {
-        return buffer($this->reader);
-    }
-
-    /**
-     * @return array
      * @throws JsonException
      * @throws ReaderError
      */
     public function decode(): array
     {
-        return json_decode($this->readAll(), true, 512, JSON_THROW_ON_ERROR);
+        return json_decode(buffer($this->reader), true, 512, JSON_THROW_ON_ERROR);
     }
 
     public function read(int $bytes = self::DEFAULT_CHUNK_SIZE): ?string

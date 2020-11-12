@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * This file is part of the https://github.com/mnavarrocarter/php-fetch project.
+ * (c) Matías Navarro-Carter <mnavarrocarter@gmail.com>
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
 namespace MNC\Http;
 
@@ -21,19 +27,13 @@ use Exception;
  *
  * Not throwing exceptions means we are not following the rules of the protocol
  * we are trying to implement.
- *
- * @package MNC\Http\Error
  */
 class ProtocolError extends Exception
 {
-    /**
-     * @var Response
-     */
     private Response $response;
 
     /**
      * ProtocolError constructor.
-     * @param Response $response
      */
     public function __construct(Response $response)
     {
@@ -41,9 +41,6 @@ class ProtocolError extends Exception
         $this->response = $response;
     }
 
-    /**
-     * @return Response
-     */
     public function getResponse(): Response
     {
         return $this->response;

@@ -3,6 +3,11 @@ PHP Fetch
 
 A simple, type-safe, zero dependency port of the javascript `fetch` WebApi for PHP.
 
+
+<h3 align="center">
+    <img style="alignment: center" src="https://media0.giphy.com/media/xlYKItjhiDsY/giphy.gif?cid=ecf05e474io66b5jt2mrufubg3otjzq26qgtqd0cb0w71fiu&rid=giphy.gif"/>
+</h3>
+
 > NOTE: This library is in `< 1.0.0` version and as per the Semantic Versioning Spec, breaking
 > changes might occur in minor releases before reaching `1.0.0`. Specify your constraints 
 > carefully.
@@ -61,6 +66,27 @@ At the moment, the only options supported are:
 - `method`: Sets the request method
 - `body`: The request body. It can be a `resource`, a `string` or `null`.
 - `headers`: An associative array of header names and values.
+
+### Getting response information
+
+You can get all the information you need from the response using
+the available api.
+
+```php
+<?php
+
+use function MNC\Http\fetch;
+
+$response = fetch('https://mnavarro.dev');
+
+echo $response->status()->protocolVersion();  // 1.1
+echo $response->status()->code();   // 200
+echo $response->status()->reasonPhrase(); // OK
+echo $response->headers()->has('content-type'); // true
+echo $response->headers()->contains('content-type', 'html'); // true
+echo $response->headers()->get('content-type'); // text/html;charset=utf-8
+echo $response->body()->read(''); // Outputs some bytes from the response body
+```
 
 ### Exception Handling
 
@@ -123,8 +149,8 @@ when we provide helpers like these in our apis.
 This library provides an approach a bit more safe. If the response headers contain the
 `application/json` content type, the `MNC\Http\Io\Reader` object of the body is internally
 decorated with a `MNC\Http\Encoding\Json` object. This object implements both the
-`JsonReader` and `JsonDecoder` interfaces, plus the normal `Reader` interface, 
-and you can check for those interfaces to conveniently handle json payloads safely.
+`Reader` and `JsonDecoder` interfaces. Checking for the former is the safest way of
+handling json payloads:
 
 ```php
 <?php
@@ -385,8 +411,12 @@ So, the simplicity of this library is more than enough for most of my applicatio
 Again, this is not a defect of HTTP clients per se. A client that has many features will 
 have a lot of code and dependencies. The question is whether you need those features for
 your use case or not. In my experience, most of the time I don't need them, and I
-always ended up doing simple HTTP requests with PHP streams. I built this library so
-I don't have to do that anymore.
+always end up doing simple HTTP requests with PHP streams. I built this library so
+I don't have to do that anymore for simple use cases.
+
+Again, if your use case is more complex, you might want to consider using a more feature
+rich HTTP client. [Symfony Panther](https://github.com/symfony/panther) is my go-to
+recommendation for web scraping, for example.
 
 ### No HTTP client is just a function
 

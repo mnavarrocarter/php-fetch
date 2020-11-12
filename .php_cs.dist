@@ -1,0 +1,27 @@
+<?php
+
+$header = <<<EOF
+This file is part of the https://github.com/mnavarrocarter/php-fetch project.
+(c) Matías Navarro-Carter <mnavarrocarter@gmail.com>
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+EOF;
+
+return PhpCsFixer\Config::create()
+    ->setRules([
+        '@Symfony' => true,
+        'array_syntax' => ['syntax' => 'short'],
+        'phpdoc_no_empty_return' => true,
+        'header_comment' => ['header' => $header],
+        'yoda_style' => [
+            'equal' => false,
+            'identical' => false,
+            'less_and_greater' => false,
+            'always_move_variable' => true
+        ],
+    ])
+    ->setFinder(
+        PhpCsFixer\Finder::create()
+            ->in(__DIR__.'/src')
+    )
+;
