@@ -18,7 +18,7 @@ final class RedirectedHttpResponse implements Response, Redirected
 {
     private Response $response;
     /**
-     * @var list<PartialResponse>
+     * @var array<PartialResponse>
      */
     private array $previous;
 

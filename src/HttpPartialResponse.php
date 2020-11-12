@@ -21,7 +21,7 @@ final class HttpPartialResponse implements PartialResponse
     private Headers $headers;
 
     /**
-     * @param list<string> $lines
+     * @param array<string> $lines
      *
      * @return list<HttpPartialResponse>
      */
@@ -30,11 +30,13 @@ final class HttpPartialResponse implements PartialResponse
         $partials = [];
         while ($lines !== []) {
             $line = array_shift($lines);
-            if (strpos($line, 'HTTP') === 0) {
-                $status = Status::fromStatusLine($line);
-                $headers = Headers::fromLines($lines);
-                $partials[] = new HttpPartialResponse($status, $headers);
+            if (strpos($line, 'HTTP') !== 0) {
+                continue;
             }
+            $partials[] = new HttpPartialResponse(
+                Status::fromStatusLine($line),
+                Headers::fromLines($lines)
+            );
         }
 
         return $partials;
