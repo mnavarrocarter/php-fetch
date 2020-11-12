@@ -14,10 +14,14 @@ namespace MNC\Http;
  */
 class Headers
 {
+    /**
+     * @var array<string, string>
+     */
     private array $headers;
 
     /**
      * @internal You should not use this api
+     * @param string[] $lines
      */
     public static function fromLines(array &$lines): Headers
     {
@@ -35,6 +39,9 @@ class Headers
         return $headers;
     }
 
+    /**
+     * @param array<string, string> $headers
+     */
     public static function fromMap(array $headers): Headers
     {
         $self = new self();
@@ -83,6 +90,9 @@ class Headers
         return array_key_exists($name, $this->headers);
     }
 
+    /**
+     * @return string[]
+     */
     public function map(callable $callable): array
     {
         $arr = [];
@@ -93,6 +103,9 @@ class Headers
         return $arr;
     }
 
+    /**
+     * @return array<string, string>
+     */
     public function filter(callable $callable): array
     {
         $arr = [];
@@ -105,11 +118,17 @@ class Headers
         return $arr;
     }
 
+    /**
+     * @return string[]
+     */
     public function toArray(): array
     {
         return $this->map(fn (string $value, string $name) => $name.': '.$value);
     }
 
+    /**
+     * @return array<string, string>
+     */
     public function toMap(): array
     {
         return $this->headers;

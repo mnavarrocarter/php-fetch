@@ -21,6 +21,7 @@ final class HttpPartialResponse implements PartialResponse
     private Headers $headers;
 
     /**
+     * @param HttpPartialResponse[] $lines
      * @return HttpPartialResponse[]
      */
     public static function parseLines(array $lines): array
