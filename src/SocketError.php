@@ -19,6 +19,6 @@ use Exception;
  * or network error), dns unable to resolve to an ip address or the server
  * being down.
  */
-class SocketError extends Exception
+class SocketError extends Exception implements FetchError
 {
 }

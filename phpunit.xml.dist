@@ -6,14 +6,8 @@
     <coverage>
         <include>
             <directory>src</directory>
-            <file>functions.php</file>
         </include>
     </coverage>
-
-    <php>
-        <server name="TEST_SERVER" value="http://127.0.0.1:10000/server.php"/>
-    </php>
-
     <testsuites>
         <testsuite name="Main Test Suite">
             <directory>tests</directory>

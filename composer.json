@@ -14,7 +14,9 @@
         "psr-4": {
             "MNC\\Http\\": "src"
         },
-        "files": ["functions.php"]
+        "files": [
+            "src/functions.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {

@@ -2,20 +2,23 @@
 
 declare(strict_types=1);
 
+/*
+ * This file is part of the https://github.com/mnavarrocarter/php-fetch project.
+ * (c) Matías Navarro-Carter <mnavarrocarter@gmail.com>
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace MNC\Http;
 
 use MNC\Http\Io\Reader;
 use MNC\Http\Io\ResourceReader;
 
 /**
- * Fetches a url
- *
- * @param string $url
- * @param array $options
- * @return Response
+ * Fetches a url.
  *
  * @throws ProtocolError when the server responds with an error
- * @throws SocketError when a connection cannot be established
+ * @throws SocketError   when a connection cannot be established
  */
 function fetch(string $url, array $options = []): Response
 {
@@ -26,7 +29,6 @@ function fetch(string $url, array $options = []): Response
     $maxRedirects = $options['max_redirects'] ?? 20;
     $protocolVersion = $options['protocol_version'] ?? '1.1';
 
-    // TODO: Need to add more options like cache, redirects following and others
     $context = [
         'http' => [
             'method' => $method,
@@ -35,13 +37,13 @@ function fetch(string $url, array $options = []): Response
             'ignore_errors' => true,
             'follow_location' => $followRedirects ? 1 : 0,
             'max_redirects' => $maxRedirects,
-            'protocol_version' => (float) $protocolVersion
-        ]
+            'protocol_version' => (float) $protocolVersion,
+        ],
     ];
 
     $resource = @fopen($url, 'rb', false, stream_context_create($context));
     if (!is_resource($resource)) {
-        throw new SocketError(error_get_last()['message']);
+        throw new SocketError(error_get_last()['message'] ?? 'Unknown error');
     }
     stream_set_blocking($resource, false);
 
@@ -70,14 +72,16 @@ function fetch(string $url, array $options = []): Response
 }
 
 /**
- * @param Reader $reader
  * @return string The buffered string
+ *
  * @throws Io\ReaderError
  */
-function buffer(Reader $reader) {
+function buffer(Reader $reader)
+{
     $buffer = '';
     while (($chunk = $reader->read()) !== null) {
         $buffer .= $chunk;
     }
+
     return $buffer;
 }

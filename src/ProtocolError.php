@@ -28,7 +28,7 @@ use Exception;
  * Not throwing exceptions means we are not following the rules of the protocol
  * we are trying to implement.
  */
-class ProtocolError extends Exception
+class ProtocolError extends Exception implements FetchError
 {
     private Response $response;
 
