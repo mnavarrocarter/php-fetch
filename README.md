@@ -44,7 +44,7 @@ as a second argument:
 use function MNC\Http\buffer;
 use function MNC\Http\fetch;
 
-$response = fetch('https://some-domain.com/some-form', [
+$response = fetch('https://some-domain.example/some-form', [
     'method' => 'POST',
     'headers' => [
         'Content-Type' => 'application/json',
@@ -241,7 +241,7 @@ use function MNC\Http\fetch;
 
 $authenticate = static function (string $token) {
     return static function (string $method, string $path, array $contents = null) use ($token): ?array {
-        $url = 'https://my-api-service.com' . $path;
+        $url = 'https://my-api-service.example' . $path;
         $response = fetch($url, [
             'method' => $method,
             'headers' => [
@@ -313,7 +313,7 @@ final class FetchApiClient implements ApiClient
     public static function authenticate(string $token): FetchApiClient
     {
         $client = static function (string $method, string $path, array $contents = null) use ($token): ?array {
-            $url = 'https://my-api-service.com' . $path;
+            $url = 'https://my-api-service.example' . $path;
             $response = fetch($url, [
                 'method' => $method,
                 'headers' => [
