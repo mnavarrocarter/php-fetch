@@ -1,8 +1,6 @@
-PHP Fetch
-=========
+<h1 align="center">PHP Fetch</h1>
 
-A simple, type-safe, zero dependency port of the javascript `fetch` WebApi for PHP.
-
+<p align="center">A simple, type-safe, zero dependency port of the javascript fetch WebApi for PHP.</p>
 
 <h3 align="center">
     <img style="alignment: center" src="https://media0.giphy.com/media/xlYKItjhiDsY/giphy.gif?cid=ecf05e474io66b5jt2mrufubg3otjzq26qgtqd0cb0w71fiu&rid=giphy.gif"/>
@@ -63,9 +61,12 @@ while (($chunk = $response->body()->read()) !== null) {
 
 At the moment, the only options supported are:
 
-- `method`: Sets the request method
-- `body`: The request body. It can be a `resource`, a `string` or `null`.
-- `headers`: An associative array of header names and values.
+- `method (string)`: Sets the request method
+- `body (resource|string)`: The request body.
+- `headers (array<string|string>)`: An associative array of header names and values.
+- `follow_redirects (bool)`: Whether to follow redirects or not. Default is `true`.
+- `protocol_version (string)`: The http protocol version to use. Default is `1.1`.
+- `max_redirects (int)`: The number of times you allow redirecting. Default is `20`.
 
 ### Getting response information
 
@@ -85,7 +86,7 @@ echo $response->status()->reasonPhrase(); // OK
 echo $response->headers()->has('content-type'); // true
 echo $response->headers()->contains('content-type', 'html'); // true
 echo $response->headers()->get('content-type'); // text/html;charset=utf-8
-echo $response->body()->read(''); // Outputs some bytes from the response body
+echo $response->body()->read(); // Outputs some bytes from the response body
 ```
 
 ### Exception Handling
