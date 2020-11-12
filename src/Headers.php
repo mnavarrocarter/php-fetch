@@ -21,7 +21,7 @@ class Headers
 
     /**
      * @internal You should not use this api
-     * @param string[] $lines
+     * @param list<string> $lines
      */
     public static function fromLines(array &$lines): Headers
     {
@@ -91,7 +91,7 @@ class Headers
     }
 
     /**
-     * @return string[]
+     * @return list<string>
      */
     public function map(callable $callable): array
     {
@@ -119,7 +119,7 @@ class Headers
     }
 
     /**
-     * @return string[]
+     * @return list<string>
      */
     public function toArray(): array
     {

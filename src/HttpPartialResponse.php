@@ -21,13 +21,13 @@ final class HttpPartialResponse implements PartialResponse
     private Headers $headers;
 
     /**
-     * @param HttpPartialResponse[] $lines
-     * @return HttpPartialResponse[]
+     * @param list<string> $lines
+     * @return list<HttpPartialResponse>
      */
     public static function parseLines(array $lines): array
     {
         $partials = [];
-        while (count($lines) > 0) {
+        while ($lines !== []) {
             $line = array_shift($lines);
             if (strpos($line, 'HTTP') === 0) {
                 $status = Status::fromStatusLine($line);

@@ -19,7 +19,7 @@ interface Redirected
      *
      * The body of those responses is not available.
      *
-     * @return PartialResponse[]
+     * @return list<PartialResponse>
      */
     public function previousResponses(): array;
 }
