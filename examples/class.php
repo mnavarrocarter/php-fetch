@@ -43,7 +43,7 @@ final class FetchApiClient implements ApiClient
 
             $body = $response->body();
             if ($body instanceof JsonDecoder) {
-                return $body->parseJson();
+                return $body->decode();
             }
             return null;
         };

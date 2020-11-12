@@ -18,7 +18,7 @@ $authenticated = static function (string $token) {
 
         $body = $response->body();
         if ($body instanceof JsonDecoder) {
-            return $body->parseJson();
+            return $body->decode();
         }
         return null;
     };

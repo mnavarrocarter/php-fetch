@@ -14,5 +14,5 @@ $response = fetch('https://api.github.com/users/mnavarrocarter', [
 $body = $response->body();
 
 if ($body instanceof JsonDecoder) {
-    var_dump($body->parseJson()); // Dumps the json as an array
+    var_dump($body->decode()); // Dumps the json as an array
 }

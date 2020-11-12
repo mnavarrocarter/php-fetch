@@ -1,40 +1,47 @@
 <?php
 
+/*
+ * This file is part of the https://github.com/mnavarrocarter/php-fetch project.
+ * (c) Matías Navarro-Carter <mnavarrocarter@gmail.com>
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
 namespace MNC\Http;
 
 /**
- * Class Headers
- * @package MNC\Http
+ * Class Headers.
  */
 class Headers
 {
     private array $headers;
 
     /**
-     * @param array $headers
-     * @return Headers
+     * @internal You should not use this api
      */
-    public static function fromArray(array $headers): Headers
+    public static function fromLines(array &$lines): Headers
     {
-        $self = new self();
-        foreach ($headers as $header) {
-            [$name, $value] = explode(':', $header, 2);
-            $self->put($name, trim($value));
+        $headers = new self();
+        while (count($lines) !== 0) {
+            $line = array_shift($lines);
+            if (strpos($line, 'HTTP') === 0) {
+                array_unshift($lines, $line); // Put the line back
+                break;
+            }
+            [$name, $value] = explode(':', $line, 2);
+            $headers->put($name, trim($value));
         }
-        return $self;
+
+        return $headers;
     }
 
-    /**
-     * @param array $headers
-     * @return Headers
-     */
     public static function fromMap(array $headers): Headers
     {
         $self = new self();
         foreach ($headers as $name => $value) {
             $self->put($name, $value);
         }
+
         return $self;
     }
 
@@ -46,10 +53,6 @@ class Headers
         $this->headers = [];
     }
 
-    /**
-     * @param string $name
-     * @param string $value
-     */
     protected function put(string $name, string $value): void
     {
         $name = strtolower($name);
@@ -57,54 +60,39 @@ class Headers
     }
 
     /**
-     * Returns a header
-     * @param string $name
-     * @return string
+     * Returns a header.
      */
     public function get(string $name): string
     {
         $name = strtolower($name);
+
         return $this->headers[$name] ?? '';
     }
 
-    /**
-     * @param string $name
-     * @param string $substring
-     * @return bool
-     */
     public function contains(string $name, string $substring): bool
     {
         $name = strtolower($name);
+
         return strpos($this->get($name), $substring) !== false;
     }
 
-    /**
-     * @param string $name
-     * @return bool
-     */
     public function has(string $name): bool
     {
         $name = strtolower($name);
+
         return array_key_exists($name, $this->headers);
     }
 
-    /**
-     * @param callable $callable
-     * @return array
-     */
     public function map(callable $callable): array
     {
         $arr = [];
         foreach ($this->headers as $name => $value) {
             $arr[] = $callable($value, $name);
         }
+
         return $arr;
     }
 
-    /**
-     * @param callable $callable
-     * @return array
-     */
     public function filter(callable $callable): array
     {
         $arr = [];
@@ -113,12 +101,13 @@ class Headers
                 $arr[$name] = $value;
             }
         }
+
         return $arr;
     }
 
     public function toArray(): array
     {
-        return $this->map(fn(string $value, string $name) => $name .': '.$value);
+        return $this->map(fn (string $value, string $name) => $name.': '.$value);
     }
 
     public function toMap(): array
