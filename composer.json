@@ -38,7 +38,7 @@
         "symfony/var-dumper": "^5.1",
         "vimeo/psalm": "^4.1",
         "amphp/http-server": "^2.1",
-        "amphp/http-server-static-content": "^1.0",
+        "amphp/http-server-static-content": "^1.0.6",
         "mnavarrocarter/amp-http-router": "^0.1.0",
         "friendsofphp/php-cs-fixer": "^2.16"
     }
