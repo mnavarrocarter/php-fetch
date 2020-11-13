@@ -27,7 +27,7 @@ class Headers
     public static function fromLines(array &$lines): Headers
     {
         $headers = new self();
-        while (count($lines) !== 0) {
+        while ($lines !== []) {
             $line = array_shift($lines);
             if (strpos($line, 'HTTP') === 0) {
                 array_unshift($lines, $line); // Put the line back
@@ -63,8 +63,7 @@ class Headers
 
     protected function put(string $name, string $value): void
     {
-        $name = strtolower($name);
-        $this->headers[$name] = $value;
+        $this->headers[strtolower($name)] = $value;
     }
 
     /**
@@ -72,23 +71,17 @@ class Headers
      */
     public function get(string $name): string
     {
-        $name = strtolower($name);
-
-        return $this->headers[$name] ?? '';
+        return $this->headers[strtolower($name)] ?? '';
     }
 
     public function contains(string $name, string $substring): bool
     {
-        $name = strtolower($name);
-
-        return strpos($this->get($name), $substring) !== false;
+        return strpos($this->get(strtolower($name)), $substring) !== false;
     }
 
     public function has(string $name): bool
     {
-        $name = strtolower($name);
-
-        return array_key_exists($name, $this->headers);
+        return array_key_exists(strtolower($name), $this->headers);
     }
 
     /**
@@ -96,12 +89,11 @@ class Headers
      */
     public function map(callable $callable): array
     {
-        $arr = [];
-        foreach ($this->headers as $name => $value) {
-            $arr[] = $callable($value, $name);
-        }
-
-        return $arr;
+        return array_map(
+            fn (string $name, string $value) => $callable($value, $name),
+            array_keys($this->headers),
+            $this->headers
+        );
     }
 
     /**
@@ -109,14 +101,11 @@ class Headers
      */
     public function filter(callable $callable): array
     {
-        $arr = [];
-        foreach ($this->headers as $name => $value) {
-            if ($callable($value, $name) === true) {
-                $arr[$name] = $value;
-            }
-        }
-
-        return $arr;
+        return array_filter(
+            $this->headers,
+            fn (string $value, string $name) => $callable($value, $name),
+            ARRAY_FILTER_USE_BOTH
+        );
     }
 
     /**
