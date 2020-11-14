@@ -17,27 +17,22 @@ use MNC\Http\Io\ResourceReader;
 /**
  * Fetches a url.
  *
+ * @param array<string, mixed> $options
+ *
  * @throws ProtocolError when the server responds with an error
  * @throws SocketError   when a connection cannot be established
  */
 function fetch(string $url, array $options = []): Response
 {
-    $method = $options['method'] ?? 'GET';
-    $headers = $options['headers'] ?? [];
-    $body = $options['body'] ?? null;
-    $followRedirects = $options['follow_redirects'] ?? true;
-    $maxRedirects = $options['max_redirects'] ?? 20;
-    $protocolVersion = $options['protocol_version'] ?? '1.1';
-
     $context = [
         'http' => [
-            'method' => $method,
-            'header' => Headers::fromMap($headers)->toArray(),
-            'contents' => $body,
+            'method' => $options['method'] ?? 'GET',
+            'header' => Headers::fromMap($options['headers'] ?? [])->toArray(),
+            'contents' => $options['body'] ?? null,
             'ignore_errors' => true,
-            'follow_location' => $followRedirects ? 1 : 0,
-            'max_redirects' => $maxRedirects,
-            'protocol_version' => (float) $protocolVersion,
+            'follow_location' => ($options['follow_redirects'] ?? true) ? 1 : 0,
+            'max_redirects' => $options['max_redirects'] ?? 20,
+            'protocol_version' => (float) ($options['protocol_version'] ?? '1.1'),
         ],
     ];
 
@@ -49,17 +44,16 @@ function fetch(string $url, array $options = []): Response
 
     // We extract relevant stream meta data
     $meta = stream_get_meta_data($resource);
-    $rawHeaders = $meta['wrapper_data'];
 
     // We create objects out of that data.
-    $partials = HttpPartialResponse::parseLines($rawHeaders);
+    $partials = HttpPartialResponse::parseLines($meta['wrapper_data']);
+    /** @var HttpPartialResponse $mainPartial */
     $mainPartial = array_pop($partials);
-    $body = new ResourceReader($resource);
-    $response = new HttpResponse($mainPartial, $body);
+    $response = new HttpResponse($mainPartial, new ResourceReader($resource));
 
     // If there are still partials, we are dealing with a redirect here.
     // We decorate the response on previous request.
-    if (count($partials) > 0) {
+    if ($partials !== []) {
         $response = new RedirectedHttpResponse($response, ...$partials);
     }
 
