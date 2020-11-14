@@ -31,7 +31,7 @@
         "lint": "php-cs-fixer fix",
         "pr": [
             "php-cs-fixer fix --dry-run -vvv",
-            "psalm --stats",
+            "psalm --no-cache --stats",
             "phpunit --testdox --coverage-text"
         ]
     },
