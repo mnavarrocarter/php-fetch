@@ -3,6 +3,9 @@ name: "Review PR"
 on:
   pull_request:
 
+env:
+  COMPOSER_FLAGS: --ansi --no-interaction --no-progress --prefer-dist
+
 jobs:
 
   # This job ensures the coding standard is followed
@@ -28,12 +31,11 @@ jobs:
       - name: "Use Cache"
         uses: "actions/cache@v2"
         with:
-          path: |
-            ~/.composer/cache
-          key: "php-${{ matrix.php-version }}-highest"
-          restore-keys: "php-${{ matrix.php-version }}-highest"
-      - name: "Install highest dependencies"
-        run: "composer update --no-interaction --no-progress"
+          path: ~/.composer/cache
+          key: "composer-cache"
+          restore-keys: "composer-cache"
+      - name: "Install dependencies"
+        run: "composer install ${{ env.COMPOSER_FLAGS }}"
       - name: "Coding Standard"
         run: "vendor/bin/php-cs-fixer fix -vvv --dry-run --format=checkstyle | cs2pr"
 
@@ -59,12 +61,11 @@ jobs:
       - name: "Use Cache"
         uses: "actions/cache@v2"
         with:
-          path: |
-            ~/.composer/cache
-          key: "php-${{ matrix.php-version }}-highest"
-          restore-keys: "php-${{ matrix.php-version }}-highest"
-      - name: "Install highest dependencies"
-        run: "composer update --no-interaction --no-progress"
+          path: ~/.composer/cache
+          key: "composer-cache"
+          restore-keys: "composer-cache"
+      - name: "Install dependencies"
+        run: "composer install ${{ env.COMPOSER_FLAGS }}"
       - name: "Run Psalm"
         run: "vendor/bin/psalm  --output-format=github --shepherd --stats"
 
@@ -94,18 +95,14 @@ jobs:
       - name: "Use Cache"
         uses: "actions/cache@v2"
         with:
-          path: |
-            ~/.composer/cache
-          key: "php-${{ matrix.php-version }}-${{ matrix.dependencies }}"
-          restore-keys: "php-${{ matrix.php-version }}-${{ matrix.dependencies }}"
+          path: ~/.composer/cache
+          key: "composer-cache"
+          restore-keys: "composer-cache"
       - name: "Install lowest dependencies"
         if: ${{ matrix.dependencies == 'lowest' }}
-        run: "composer update --prefer-lowest --no-interaction --no-progress --ignore-platform-reqs"
+        run: "composer update ${{ env.COMPOSER_FLAGS }} --prefer-lowest --ignore-platform-reqs"
       - name: "Install highest dependencies"
         if: ${{ matrix.dependencies == 'highest' }}
-        run: "composer update --no-interaction --no-progress --ignore-platform-reqs"
-#      - name: "Install locked dependencies"
-#        if: ${{ matrix.dependencies == 'locked' }}
-#        run: "composer install --no-interaction --no-progress --ignore-platform-reqs"
+        run: "composer update ${{ env.COMPOSER_FLAGS }} --ignore-platform-reqs"
       - name: "Run PHPUnit"
         run: "vendor/bin/phpunit --testdox --coverage-text"
