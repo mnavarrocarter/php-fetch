@@ -21,7 +21,7 @@ class FetchFunctionalTest extends TestCase
         self::assertSame('OK', $response->status()->reasonPhrase());
         self::assertTrue($response->headers()->contains('Content-Type', 'text/html'));
         self::assertTrue($response->headers()->has('etag'));
-        self::assertSame('354', $response->headers()->get('Content-Length'));
+        self::assertSame('355', $response->headers()->get('Content-Length'));
         $html = file_get_contents(__DIR__ . '/static/index.html');
         self::assertSame($html, buffer($response->body()));
     }
