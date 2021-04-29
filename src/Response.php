@@ -9,7 +9,7 @@
 
 namespace MNC\Http;
 
-use MNC\Http\Io\Reader;
+use Castor\Io\Reader;
 
 /**
  * A Response represents a full HTTP protocol response.

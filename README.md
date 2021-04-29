@@ -41,8 +41,8 @@ as a second argument:
 ```php
 <?php
 
-use function MNC\Http\buffer;
 use function MNC\Http\fetch;
+use Castor\Io\Eof;
 
 $response = fetch('https://some-domain.example/some-form', [
     'method' => 'POST',
@@ -53,8 +53,14 @@ $response = fetch('https://some-domain.example/some-form', [
     'body' => json_encode(['data' => 'value'])
 ]);
 
-// Emit the response to stdout
-while (($chunk = $response->body()->read()) !== null) {
+// Emit the response to stdout in chunks
+while (true) {
+    $chunk = '';
+    try {
+        $response->body()->read(4096, $chunk);
+    } catch (Eof $e) {
+        break;
+    }
     echo $chunk;
 }
 ```
@@ -86,7 +92,9 @@ echo $response->status()->reasonPhrase(); // OK
 echo $response->headers()->has('content-type'); // true
 echo $response->headers()->contains('content-type', 'html'); // true
 echo $response->headers()->get('content-type'); // text/html;charset=utf-8
-echo $response->body()->read(); // Outputs some bytes from the response body
+$bytes = '';
+echo $response->body()->read(4096, $bytes); // Allocates reader data into $bytes
+echo $bytes; // Outputs some bytes from the response body
 ```
 
 ### Exception Handling
@@ -112,23 +120,23 @@ you most likely will be reacting in different ways to each one of them.
 ### Body Buffering
 
 When you call the `MNC\Http\Response::body()` method you get an instance of
-`MNC\Http\Io\Reader`, which is a very simple interface inspired in golang's
+`Castor\Io\Reader`, which is a very simple interface inspired in golang's
 `io.Reader`. This interface allows you to read a chunk of bytes until you reach
 `EOF` in the data source.
 
 Often times, you don't want to read byte per byte, but get the whole contents 
-of the body as a string at once. This library provides the `buffer` function
+of the body as a string at once. This library provides the `readAll` function
 as a convenience for that:
 
 ```php
 <?php
 
-use function MNC\Http\buffer;
+use function Castor\Io\readAll;
 use function MNC\Http\fetch;
 
 $response = fetch('https://mnavarro.dev');
 
-echo buffer($response->body()); // Buffers all the contents in memory and emits them.
+echo readAll($response->body()); // Buffers all the contents in memory and emits them.
 ````
 
 Buffering is a very good convenience, but it needs to be used with care, since it could
@@ -148,15 +156,15 @@ in content types like `text/plain`. However, there is big gain in user experienc
 when we provide helpers like these in our apis.
 
 This library provides an approach a bit more safe. If the response headers contain the
-`application/json` content type, the `MNC\Http\Io\Reader` object of the body is internally
+`application/json` content type, the ``Castor\Io\Reader`` object of the body is internally
 decorated with a `MNC\Http\Encoding\Json` object. This object implements both the
-`Reader` and `JsonDecoder` interfaces. Checking for the former is the safest way of
-handling json payloads:
+`Reader` interface. Checking for the former is the safest way of handling json
+payloads:
 
 ```php
 <?php
 
-use MNC\Http\Encoding\JsonDecoder;
+use MNC\Http\Encoding\Json;
 use function MNC\Http\fetch;
 
 $response = fetch('https://api.github.com/users/mnavarrocarter', [
@@ -167,7 +175,7 @@ $response = fetch('https://api.github.com/users/mnavarrocarter', [
 
 $body = $response->body();
 
-if ($body instanceof JsonDecoder) {
+if ($body instanceof Json) {
     var_dump($body->decode()); // Dumps the json as an array
 } else {
     // The response body is not json encoded
@@ -236,7 +244,7 @@ api, using the token internally.
 ```php
 <?php
 
-use MNC\Http\Encoding\JsonDecoder;
+use MNC\Http\Encoding\Json;
 use function MNC\Http\fetch;
 
 $authenticate = static function (string $token) {
@@ -253,7 +261,7 @@ $authenticate = static function (string $token) {
         ]);
 
         $body = $response->body();
-        if ($body instanceof JsonDecoder) {
+        if ($body instanceof Json) {
             return $body->decode();
         }
         return null;
@@ -285,7 +293,7 @@ api client that I need to use.
 ```php
 <?php
 
-use MNC\Http\Encoding\JsonDecoder;
+use MNC\Http\Encoding\Json;
 use function MNC\Http\fetch;
 
 // We start with an interface, a well defined contract.
@@ -325,7 +333,7 @@ final class FetchApiClient implements ApiClient
             ]);
 
             $body = $response->body();
-            if ($body instanceof JsonDecoder) {
+            if ($body instanceof Json) {
                 return $body->decode();
             }
             return null;

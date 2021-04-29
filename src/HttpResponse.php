@@ -9,8 +9,8 @@
 
 namespace MNC\Http;
 
+use Castor\Io\Reader;
 use MNC\Http\Encoding\Json;
-use MNC\Http\Io\Reader;
 
 /**
  * Class Response.

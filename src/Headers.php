@@ -103,7 +103,7 @@ class Headers
     {
         return array_filter(
             $this->headers,
-            fn (string $value, string $name) => $callable($value, $name),
+            static fn (string $value, string $name) => $callable($value, $name),
             ARRAY_FILTER_USE_BOTH
         );
     }

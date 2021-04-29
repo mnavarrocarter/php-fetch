@@ -24,8 +24,9 @@
         }
     },
     "require": {
-        "php": "^7.4|^8.0",
-        "ext-json": "*"
+        "php": ">=7.4",
+        "ext-json": "*",
+        "castor/io": "^0.2.1"
     },
     "scripts": {
         "lint": "php-cs-fixer fix",
@@ -42,6 +43,6 @@
         "amphp/http-server": "^2.1",
         "amphp/http-server-static-content": "^1.0.6",
         "mnavarrocarter/amp-http-router": "^0.1.0",
-        "friendsofphp/php-cs-fixer": "^2.16"
+        "friendsofphp/php-cs-fixer": "dev-master"
     }
 }

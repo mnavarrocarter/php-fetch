@@ -9,15 +9,15 @@
 
 namespace MNC\Http\Encoding;
 
+use Castor\Io\Error;
+use function Castor\Io\readAll;
+use Castor\Io\Reader;
 use JsonException;
-use function MNC\Http\buffer;
-use MNC\Http\Io\Reader;
-use MNC\Http\Io\ReaderError;
 
 /**
  * Class Json.
  */
-final class Json implements Reader, JsonDecoder
+final class Json implements Reader
 {
     private Reader $reader;
 
@@ -33,15 +33,18 @@ final class Json implements Reader, JsonDecoder
      * @return array<mixed, mixed>
      *
      * @throws JsonException
-     * @throws ReaderError
+     * @throws Error
      */
     public function decode(): array
     {
-        return json_decode(buffer($this->reader), true, 512, JSON_THROW_ON_ERROR);
+        return json_decode(readAll($this->reader), true, 512, JSON_THROW_ON_ERROR);
     }
 
-    public function read(int $bytes = self::DEFAULT_CHUNK_SIZE): ?string
+    /**
+     * {@inheritDoc}
+     */
+    public function read(int $length, string &$bytes): int
     {
-        return $this->reader->read($bytes);
+        return $this->reader->read($length, $bytes);
     }
 }

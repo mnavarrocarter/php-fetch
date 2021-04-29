@@ -2,36 +2,19 @@
 
 namespace MNC\Http\Encoding;
 
+use Castor\Io\TestReader;
 use JsonException;
-use MNC\Http\Io\Reader;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * Class JsonTest
+ * @package MNC\Http\Encoding
+ */
 class JsonTest extends TestCase
 {
-    public function testItReadsFromReader(): void
-    {
-        $jsonString = '{"id":"123456"}';
-        $reader = $this->createMock(Reader::class);
-
-        $reader->expects(self::exactly(2))
-            ->method('read')
-            ->with(Reader::DEFAULT_CHUNK_SIZE)
-            ->willReturnOnConsecutiveCalls($jsonString, null);
-
-        $json = new Json($reader);
-        self::assertSame($jsonString, $json->read());
-        self::assertNull($json->read());
-    }
-
     public function testItDecodesJson(): void
     {
-        $jsonString = '{"id":"123456"}';
-        $reader = $this->createMock(Reader::class);
-
-        $reader->expects(self::exactly(2))
-            ->method('read')
-            ->with(Reader::DEFAULT_CHUNK_SIZE)
-            ->willReturnOnConsecutiveCalls($jsonString, null);
+        $reader = TestReader::fromString('{"id":"123456"}');
 
         $json = new Json($reader);
         self::assertSame(['id' => '123456'], $json->decode());
@@ -39,13 +22,7 @@ class JsonTest extends TestCase
 
     public function testItThrowsExceptionOnInvalidJson(): void
     {
-        $jsonString = '{"id":"123456", this is invalid json}';
-        $reader = $this->createMock(Reader::class);
-
-        $reader->expects(self::exactly(2))
-            ->method('read')
-            ->with(Reader::DEFAULT_CHUNK_SIZE)
-            ->willReturnOnConsecutiveCalls($jsonString, null);
+        $reader = TestReader::fromString('{"id":"123456", this is invalid json}');
 
         $json = new Json($reader);
         $this->expectException(JsonException::class);

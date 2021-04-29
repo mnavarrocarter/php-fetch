@@ -9,7 +9,7 @@
 
 namespace MNC\Http;
 
-use MNC\Http\Io\Reader;
+use Castor\Io\Reader;
 
 /**
  * The RedirectedHttpResponse composes a Response and Redirected types.
