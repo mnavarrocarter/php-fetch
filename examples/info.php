@@ -12,4 +12,6 @@ echo $response->status()->reasonPhrase(); // OK
 echo $response->headers()->has('content-type'); // true
 echo $response->headers()->contains('content-type', 'html'); // true
 echo $response->headers()->get('content-type'); // text/html;charset=utf-8
-echo $response->body()->read(); // Outputs some bytes from the response body
+$bytes = '';
+$response->body()->read(4096, $bytes); // Reads data into $bytes
+echo $bytes; // Outputs some bytes from the response body

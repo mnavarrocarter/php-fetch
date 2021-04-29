@@ -3,8 +3,9 @@
 
 namespace MNC\Http;
 
-use MNC\Http\Encoding\JsonDecoder;
+use MNC\Http\Encoding\Json;
 use PHPUnit\Framework\TestCase;
+use function Castor\Io\readAll;
 
 /**
  * Class FetchFunctionalTest
@@ -23,7 +24,7 @@ class FetchFunctionalTest extends TestCase
         self::assertTrue($response->headers()->has('etag'));
         self::assertSame('355', $response->headers()->get('Content-Length'));
         $html = file_get_contents(__DIR__ . '/static/index.html');
-        self::assertSame($html, buffer($response->body()));
+        self::assertSame($html, readAll($response->body()));
     }
 
     public function testItThrowsSocketErrorOnRefusedConnection(): void
@@ -75,7 +76,7 @@ class FetchFunctionalTest extends TestCase
         $response = fetch('http://127.0.0.1:5488/user.json');
         $body = $response->body();
         self::assertTrue($response->headers()->contains('Content-Type', 'application/json'));
-        self::assertInstanceOf(JsonDecoder::class, $body);
+        self::assertInstanceOf(Json::class, $body);
         self::assertSame([
             'id' => 'd1129f05-45e3-47ba-be0e-cffba7fdf9f6',
             'name' => 'John Doe',

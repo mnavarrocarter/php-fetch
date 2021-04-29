@@ -1,6 +1,6 @@
 <?php
 
-use MNC\Http\Encoding\JsonDecoder;
+use MNC\Http\Encoding\Json;
 use function MNC\Http\fetch;
 
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -42,7 +42,7 @@ final class FetchApiClient implements ApiClient
             ]);
 
             $body = $response->body();
-            if ($body instanceof JsonDecoder) {
+            if ($body instanceof Json) {
                 return $body->decode();
             }
             return null;

@@ -1,6 +1,6 @@
 <?php
 
-use MNC\Http\Encoding\JsonDecoder;
+use MNC\Http\Encoding\Json;
 use function MNC\Http\fetch;
 
 $authenticated = static function (string $token) {
@@ -17,7 +17,7 @@ $authenticated = static function (string $token) {
         ]);
 
         $body = $response->body();
-        if ($body instanceof JsonDecoder) {
+        if ($body instanceof Json) {
             return $body->decode();
         }
         return null;

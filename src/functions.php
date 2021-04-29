@@ -11,9 +11,6 @@ declare(strict_types=1);
 
 namespace MNC\Http;
 
-use MNC\Http\Io\Reader;
-use MNC\Http\Io\ResourceReader;
-
 /**
  * Fetches a url.
  *
@@ -47,9 +44,8 @@ function fetch(string $url, array $options = []): Response
 
     // We create objects out of that data.
     $partials = HttpPartialResponse::parseLines($meta['wrapper_data']);
-    /** @var HttpPartialResponse $mainPartial */
     $mainPartial = array_pop($partials);
-    $response = new HttpResponse($mainPartial, new ResourceReader($resource));
+    $response = new HttpResponse($mainPartial, new ResponseBody($resource));
 
     // If there are still partials, we are dealing with a redirect here.
     // We decorate the response on previous request.
@@ -57,25 +53,10 @@ function fetch(string $url, array $options = []): Response
         $response = new RedirectedHttpResponse($response, ...$partials);
     }
 
-    // If the request is an error according to the spec, we throw an exception.
+    // If the request is an error according to the http spec, we throw an exception.
     if ($response->status()->isClientError() || $response->status()->isServerError()) {
         throw new ProtocolError($response);
     }
 
     return $response;
-}
-
-/**
- * @return string The buffered string
- *
- * @throws Io\ReaderError
- */
-function buffer(Reader $reader)
-{
-    $buffer = '';
-    while (($chunk = $reader->read()) !== null) {
-        $buffer .= $chunk;
-    }
-
-    return $buffer;
 }
